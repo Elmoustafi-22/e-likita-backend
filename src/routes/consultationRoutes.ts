@@ -9,7 +9,6 @@ router.get('/', consultationController.getAllConsultations);
 router.get('/:id', consultationController.getConsultationById);
 router.put('/:id', consultationController.updateConsultation);
 
-// New routes for the consultation flow
 router.post('/:id/symptoms', consultationController.addSymptomsToConsultation);
 router.post('/:id/follow-ups', consultationController.addFollowUpsToConsultation);
 router.get('/:id/summary', consultationController.getConsultationSummary);
