@@ -17,7 +17,7 @@ To get a local copy up and running follow these simple example steps.
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/your_username_/e-likita-backend.git
+   git clone https://github.com/Elmoustafi-22/e-likita-backend.git
    ```
 2. Install NPM packages
    ```sh
