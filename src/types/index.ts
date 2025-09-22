@@ -27,8 +27,7 @@ export interface IConsultation {
   _id?: string;
   patient: string; // Patient ID
   symptoms: ISymptom[];
-  painLevel: number;
-  additionalDetails: string;
+  followUps: IFollowUp[];
   riskAssessment: {
     level: "low" | "medium" | "high";
     factors: string[];

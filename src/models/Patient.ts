@@ -1,9 +1,8 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { IPatient } from "../types";
 
-interface IPatientDocument extends Omit<IPatient, '_id'>, Document {}
 
-const PatientSchema = new Schema<IPatientDocument>({
+const PatientSchema = new Schema<IPatient>({
   fullName: { type: String, required: true },
   age: { type: Number, required: true },
   gender: { type: String, required: true },
@@ -22,6 +21,6 @@ const PatientSchema = new Schema<IPatientDocument>({
   },
 }, {timestamps: true});
 
-const Patient = mongoose.model<IPatientDocument>("Patient", PatientSchema);
+const Patient = mongoose.model<IPatient>("Patient", PatientSchema);
 
 export default Patient;

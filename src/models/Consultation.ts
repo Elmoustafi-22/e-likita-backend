@@ -1,12 +1,10 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { IConsultation } from "../types";
 import SymptomSchema from "./Symptom";
 
-interface IConsultationDocument extends Document, Omit<IConsultation, '_id'> {
-  _id: mongoose.Types.ObjectId;
-}
 
-const ConsultationSchema = new Schema<IConsultationDocument>({
+
+const ConsultationSchema = new Schema<IConsultation>({
   patient: { type: Schema.Types.ObjectId, ref: 'Patient', required: true },
   symptoms: [SymptomSchema],
   painLevel: { type: Number, required: true },
@@ -21,6 +19,6 @@ const ConsultationSchema = new Schema<IConsultationDocument>({
   consultationDuration: { type: Number, required: true },
 }, { timestamps: true });
 
-const Consultation = mongoose.model<IConsultationDocument>("Consultation", ConsultationSchema);
+const Consultation = mongoose.model<IConsultation>("Consultation", ConsultationSchema);
 
 export default Consultation;
