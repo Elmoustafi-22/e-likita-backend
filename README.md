@@ -1,15 +1,14 @@
 # E-Likita Hospital Consultation Assistant Backend
 
-Welcome to the backend of the E-Likita Hospital Consultation Assistant. This application provides a guided triage process to help users assess their symptoms and receive healthcare recommendations.
+Welcome to the backend of the E-Likita Hospital Consultation Assistant. This application provides a guided triage process to help users assess their symptoms and receive AI-powered healthcare recommendations.
 
 ## Key Features
 
 - **Patient Management**: Create and manage patient records.
 - **Guided Consultations**: A multi-step process to guide users through a consultation.
 - **Symptom Assessment**: Collect and analyze user symptoms, duration, and severity.
-- **Risk Analysis**: A system to assess health risks based on symptoms and generate a risk level (low, medium, or high).
-- **Personalized Recommendations**: Generate recommendations and next actions based on the risk assessment.
-- **Consultation Summary**: Generate a comprehensive summary of the consultation, including patient information, symptoms, risk assessment, and recommendations.
+- **AI-Powered Medical Analysis**: Utilizes Google's Gemini model to provide intelligent risk assessments and care recommendations based on patient data.
+- **Consultation Summary**: Generate a comprehensive summary of the consultation, including patient information, symptoms, AI-powered risk assessment, and recommendations.
 
 ## Technology Stack
 
@@ -18,6 +17,8 @@ Welcome to the backend of the E-Likita Hospital Consultation Assistant. This app
 - **TypeScript**: A typed superset of JavaScript that compiles to plain JavaScript.
 - **MongoDB**: A cross-platform document-oriented database program.
 - **Mongoose**: An elegant MongoDB object modeling tool for Node.js.
+- **Google AI SDK**: For integrating with Google's Gemini models to provide generative AI features.
+- **Zod**: For schema declaration and validation, ensuring robust data structures.
 - **Express-Validator**: Middleware for request data validation.
 - **Dotenv**: A zero-dependency module that loads environment variables from a `.env` file.
 - **CORS**: Middleware for enabling Cross-Origin Resource Sharing.
@@ -36,7 +37,7 @@ To get a local copy up and running, follow these simple steps.
 
 1.  **Clone the repository**
     ```sh
-    git clone https://github.com/your-username/e-likita-backend.git
+    git clone https://github.com/Elmoustafi-22/e-likita-backend.git
     ```
 2.  **Navigate to the project directory**
     ```sh
@@ -55,9 +56,10 @@ To get a local copy up and running, follow these simple steps.
     ```
     MONGODB_URI=your_mongodb_connection_string
     PORT=5000
+    GOOGLE_API_KEY=your_google_ai_api_key
     ```
 
-    Replace `your_mongodb_connection_string` with the connection string for your MongoDB database.
+    Replace the values with your specific MongoDB connection string and Google AI API key.
 
 ### Running the Application
 
@@ -74,73 +76,18 @@ The server will start on the port specified in your `.env` file (default is 5000
 ### Patients API
 
 -   **`POST /api/patients`**: Create a new patient.
-    -   **Body**:
-        ```json
-        {
-            "fullName": "John Doe",
-            "age": 30,
-            "gender": "male",
-            "phone": "+1234567890",
-            "medicalHistory": ["Asthma"],
-            "currentMedications": "Ventolin"
-        }
-        ```
-
 -   **`GET /api/patients`**: Get all patients.
 -   **`GET /api/patients/:id`**: Get a patient by ID.
 
 ### Consultations API
 
 -   **`POST /api/consultations`**: Create a new consultation.
-    -   **Body**:
-        ```json
-        {
-            "patient": "patient_id",
-            "symptoms": [
-                {
-                    "symptoms": ["Fever", "Cough"],
-                    "duration": "3 days",
-                    "severity": 5,
-                    "additionalDetails": "Mild cough"
-                }
-            ],
-            "painLevel": 5,
-            "additionalDetails": "Feeling unwell for the past three days."
-        }
-        ```
-
 -   **`GET /api/consultations`**: Get all consultations.
 -   **`GET /api/consultations/:id`**: Get a consultation by ID.
 -   **`PUT /api/consultations/:id`**: Update a consultation.
-
 -   **`POST /api/consultations/:id/symptoms`**: Add symptoms to a consultation.
-    -   **Body**:
-        ```json
-        {
-            "symptoms": [
-                {
-                    "symptoms": ["Headache"],
-                    "duration": "1 day",
-                    "severity": 3
-                }
-            ]
-        }
-        ```
-
 -   **`POST /api/consultations/:id/follow-ups`**: Add follow-up answers to a consultation.
-    -   **Body**:
-        ```json
-        {
-            "followUps": [
-                {
-                    "question": "Where is the pain located?",
-                    "answer": "lower-left"
-                }
-            ]
-        }
-        ```
-
--   **`GET /api/consultations/:id/summary`**: Generate and get the consultation summary.
+-   **`GET /api/consultations/:id/summary`**: Generate and get the AI-powered consultation summary.
 
 ## Project Structure
 
@@ -157,9 +104,16 @@ src/
 └── index.ts        # Main application entry point
 ```
 
-## Future Improvements
+## AI Integration
 
-To enhance the capabilities of the E-Likita Hospital Consultation Assistant, future versions could incorporate AI models to provide more accurate and personalized suggestions, risk assessments, and summaries. By leveraging machine learning, the system can continuously learn from new data and improve its ability to assist patients effectively.
+This application leverages Google's Gemini model via the Vercel AI SDK to provide intelligent medical insights. When a consultation summary is generated, the backend service sends the patient's symptoms, pain level, and medical history to the AI.
+
+The AI then provides:
+- A **Risk Assessment** (low, medium, or high).
+- **Key Factors** that influenced its assessment.
+- Actionable **Recommendations** and **Next Steps**.
+
+This AI-powered analysis enhances the quality of the triage process, offering more nuanced and data-driven guidance to the user. The system is designed with a fallback mechanism to provide rule-based suggestions if the AI service is unavailable.
 
 ## Contributing
 

@@ -10,16 +10,16 @@ export const createConsultation = async (
   const populatedConsultation = await Consultation.findById(
     consultation._id
   ).populate("patient");
-  return enhanceConsultationWithCalculations(populatedConsultation!.toObject());
+  return await enhanceConsultationWithCalculations(populatedConsultation!.toObject());
 };
 
 export const getAllConsultations = async (): Promise<
   IConsultationResponse[]
 > => {
   const consultations = await Consultation.find().populate("patient");
-  return consultations.map((consultation) =>
-    enhanceConsultationWithCalculations(consultation.toObject())
-  );
+  return await Promise.all(consultations.map(async (consultation) =>
+    await enhanceConsultationWithCalculations(consultation.toObject())
+  ));
 };
 
 export const getConsultationById = async (
@@ -29,7 +29,7 @@ export const getConsultationById = async (
   if (!consultation) {
     return null;
   }
-  return enhanceConsultationWithCalculations(consultation.toObject());
+  return await enhanceConsultationWithCalculations(consultation.toObject());
 };
 
 export const addSymptoms = async (
@@ -45,7 +45,7 @@ export const addSymptoms = async (
   if (!consultation) {
     return null;
   }
-  return enhanceConsultationWithCalculations(consultation.toObject());
+  return await enhanceConsultationWithCalculations(consultation.toObject());
 };
 
 export const addFollowUps = async (
@@ -59,7 +59,7 @@ export const addFollowUps = async (
     return null;
   }
   // Process followUps as needed for calculations but don't store them
-  return enhanceConsultationWithCalculations(consultation.toObject());
+  return await enhanceConsultationWithCalculations(consultation.toObject());
 };
 
 export const generateSummary = async (
@@ -70,7 +70,7 @@ export const generateSummary = async (
     return null;
   }
   // Return the enhanced consultation with all calculated fields
-  return enhanceConsultationWithCalculations(consultation.toObject());
+  return await enhanceConsultationWithCalculations(consultation.toObject());
 };
 
 export const updateConsultation = async (
@@ -94,5 +94,5 @@ export const updateConsultation = async (
   if (!consultation) {
     return null;
   }
-  return enhanceConsultationWithCalculations(consultation.toObject());
+  return await enhanceConsultationWithCalculations(consultation.toObject());
 };

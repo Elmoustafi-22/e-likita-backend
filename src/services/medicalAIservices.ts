@@ -1,12 +1,29 @@
-import OpenAI from "openai";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { generateObject } from "ai";
+import { z } from "zod";
 import { ISymptom, IFollowUp, IPatient } from "../types";
 import { config } from "dotenv";
 
-config()
+config();
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+// Initialize Google AI client
+const google = createGoogleGenerativeAI({
+  apiKey: process.env.GOOGLE_API_KEY,
+});
+
+// Define Zod schemas for AI responses
+const riskAssessmentSchema = z.object({
+  level: z.enum(["low", "medium", "high"]),
+  factors: z.array(z.string()),
+  confidence: z.number(),
+  reasoning: z.string(),
+});
+
+const recommendationsSchema = z.object({
+  recommendations: z.array(z.string()),
+  nextActions: z.array(z.string()),
+  urgency: z.enum(["immediate", "soon", "routine"]),
+  redFlags: z.array(z.string()),
 });
 
 export class MedicalAIService {
@@ -25,32 +42,15 @@ export class MedicalAIService {
     );
 
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content: `You are a medical triage AI assistant. Analyze symptoms and provide risk assessment.
-            Always be conservative - when in doubt, recommend higher care level.
-            Respond ONLY in valid JSON format with this structure:
-            {
-              "level": "low|medium|high",
-              "factors": ["factor1", "factor2"],
-              "confidence": 0.85,
-              "reasoning": "Brief explanation"
-            }`,
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-        max_tokens: 300,
-        temperature: 0.1, // Low temperature for consistent medical advice
+      const { object } = await generateObject({
+        model: google("models/gemini-1.5-flash"),
+        schema: riskAssessmentSchema,
+        system: `You are a medical triage AI assistant. Analyze symptoms and provide risk assessment.
+                 Always be conservative - when in doubt, recommend higher care level.`,
+        prompt,
+        temperature: 0.1,
       });
-
-      const aiResponse = response.choices[0]?.message?.content;
-      return this.parseAIResponse(aiResponse);
+      return object;
     } catch (error) {
       console.error("AI Risk Assessment Error:", error);
       // Fallback to rule-based assessment
@@ -75,32 +75,15 @@ export class MedicalAIService {
     );
 
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
-        messages: [
-          {
-            role: "system",
-            content: `You are a medical triage AI providing care recommendations.
-            Always prioritize patient safety. Be specific and actionable.
-            Respond ONLY in valid JSON format:
-            {
-              "recommendations": ["recommendation1", "recommendation2"],
-              "nextActions": ["action1", "action2"],
-              "urgency": "immediate|soon|routine",
-              "redFlags": ["warning1", "warning2"]
-            }`,
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-        max_tokens: 400,
+      const { object } = await generateObject({
+        model: google("models/gemini-1.5-pro"), // Using a more powerful model for recommendations
+        schema: recommendationsSchema,
+        system: `You are a medical triage AI providing care recommendations.
+                 Always prioritize patient safety. Be specific and actionable.`,
+        prompt,
         temperature: 0.1,
       });
-
-      const aiResponse = response.choices[0]?.message?.content;
-      return this.parseRecommendationsResponse(aiResponse);
+      return object;
     } catch (error) {
       console.error("AI Recommendations Error:", error);
       // Fallback to rule-based recommendations
@@ -218,54 +201,6 @@ export class MedicalAIService {
     return prompt;
   }
 
-  // Parse AI response with error handling
-  private parseAIResponse(response: string | null) {
-    try {
-      if (!response) throw new Error("No AI response");
-
-      const parsed = JSON.parse(response);
-      return {
-        level: parsed.level || "medium",
-        factors: parsed.factors || ["AI assessment completed"],
-        confidence: parsed.confidence || 0.5,
-        reasoning: parsed.reasoning || "AI-generated assessment",
-      };
-    } catch (error) {
-      console.error("Failed to parse AI response:", error);
-      return {
-        level: "medium",
-        factors: ["Unable to complete AI assessment"],
-        confidence: 0.3,
-        reasoning: "Fallback assessment due to parsing error",
-      };
-    }
-  }
-
-  // Parse recommendations response
-  private parseRecommendationsResponse(response: string | null) {
-    try {
-      if (!response) throw new Error("No AI response");
-
-      const parsed = JSON.parse(response);
-      return {
-        recommendations: parsed.recommendations || [
-          "Consult with healthcare provider",
-        ],
-        nextActions: parsed.nextActions || ["Schedule medical appointment"],
-        urgency: parsed.urgency || "routine",
-        redFlags: parsed.redFlags || [],
-      };
-    } catch (error) {
-      console.error("Failed to parse recommendations response:", error);
-      return {
-        recommendations: ["Consult with healthcare provider"],
-        nextActions: ["Schedule medical appointment"],
-        urgency: "routine",
-        redFlags: [],
-      };
-    }
-  }
-
   // Fallback rule-based assessment
   private fallbackRiskAssessment(symptoms: ISymptom[], painLevel: number) {
     const urgentSymptoms = [
@@ -283,7 +218,7 @@ export class MedicalAIService {
 
     if (hasUrgentSymptoms || painLevel >= 8) {
       return {
-        level: "high",
+        level: "high" as const,
         factors: ["Emergency symptoms detected", "High pain level"],
         confidence: 0.8,
         reasoning:
@@ -291,7 +226,7 @@ export class MedicalAIService {
       };
     } else if (painLevel >= 5) {
       return {
-        level: "medium",
+        level: "medium" as const,
         factors: [
           "Moderate pain level",
           `Symptoms reported: ${allSymptoms.join(", ")}`,
@@ -302,7 +237,7 @@ export class MedicalAIService {
     }
 
     return {
-      level: "low",
+      level: "low" as const,
       factors: [`Mild symptoms: ${allSymptoms.join(", ")}`, "Low pain level"],
       confidence: 0.6,
       reasoning: "Rule-based fallback assessment - mild symptoms",
@@ -329,7 +264,7 @@ export class MedicalAIService {
           "Go to nearest emergency department",
           "Have someone accompany you",
         ],
-        urgency: "immediate",
+        urgency: "immediate" as const,
         redFlags: ["Call 911 if breathing difficulty or chest pain worsens"],
       };
     } else if (riskLevel === "medium") {
@@ -344,7 +279,7 @@ export class MedicalAIService {
           "Keep symptom diary",
           "Return if symptoms worsen",
         ],
-        urgency: "urgent",
+        urgency: "soon" as const,
         redFlags: ["Seek immediate care if pain increases significantly"],
       };
     }
@@ -360,7 +295,7 @@ export class MedicalAIService {
         "Self-monitor for 24-48 hours",
         "Continue normal activities as tolerated",
       ],
-      urgency: "routine",
+      urgency: "routine" as const,
       redFlags: [],
     };
   }
