@@ -12,7 +12,11 @@ const app = (0, express_1.default)();
 // Connect to database
 (0, database_1.default)();
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5173",
+    origin: [
+        "http://localhost:5173",
+        "https://e-likita-frontend-mauve.vercel.app",
+        "https://e-likita-frontend-7yigaue6w-mustophas-projects.vercel.app"
+    ],
 }));
 app.use(express_1.default.urlencoded({ extended: true }));
 // Init Middleware

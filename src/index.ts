@@ -10,7 +10,11 @@ const app = express();
 connectDB();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173", 
+      "https://e-likita-frontend-mauve.vercel.app",
+      "https://e-likita-frontend-7yigaue6w-mustophas-projects.vercel.app"
+    ],
   })
 );
 app.use(express.urlencoded({ extended: true }));
