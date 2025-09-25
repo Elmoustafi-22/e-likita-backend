@@ -157,6 +157,10 @@ src/
 └── index.ts        # Main application entry point
 ```
 
+## Future Improvements
+
+To enhance the capabilities of the E-Likita Hospital Consultation Assistant, future versions could incorporate AI models to provide more accurate and personalized suggestions, risk assessments, and summaries. By leveraging machine learning, the system can continuously learn from new data and improve its ability to assist patients effectively.
+
 ## Contributing
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
