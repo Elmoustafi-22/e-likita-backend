@@ -7,8 +7,9 @@ Welcome to the backend of the E-Likita Hospital Consultation Assistant. This app
 - **Patient Management**: Create and manage patient records.
 - **Guided Consultations**: A multi-step process to guide users through a consultation.
 - **Symptom Assessment**: Collect and analyze user symptoms, duration, and severity.
-- **Risk Analysis**: A (placeholder) system to assess health risks based on symptoms.
+- **Risk Analysis**: A system to assess health risks based on symptoms and generate a risk level (low, medium, or high).
 - **Personalized Recommendations**: Generate recommendations and next actions based on the risk assessment.
+- **Consultation Summary**: Generate a comprehensive summary of the consultation, including patient information, symptoms, risk assessment, and recommendations.
 
 ## Technology Stack
 
@@ -19,6 +20,7 @@ Welcome to the backend of the E-Likita Hospital Consultation Assistant. This app
 - **Mongoose**: An elegant MongoDB object modeling tool for Node.js.
 - **Express-Validator**: Middleware for request data validation.
 - **Dotenv**: A zero-dependency module that loads environment variables from a `.env` file.
+- **CORS**: Middleware for enabling Cross-Origin Resource Sharing.
 
 ## Getting Started
 
@@ -34,7 +36,7 @@ To get a local copy up and running, follow these simple steps.
 
 1.  **Clone the repository**
     ```sh
-    git clone https://github.com/Elmoustafi-22/e-likita-backend.git
+    git clone https://github.com/your-username/e-likita-backend.git
     ```
 2.  **Navigate to the project directory**
     ```sh
@@ -80,8 +82,7 @@ The server will start on the port specified in your `.env` file (default is 5000
             "gender": "male",
             "phone": "+1234567890",
             "medicalHistory": ["Asthma"],
-            "knownAllergies": ["Pollen"],
-            "currentMedications": ["Ventolin"]
+            "currentMedications": "Ventolin"
         }
         ```
 
@@ -94,12 +95,23 @@ The server will start on the port specified in your `.env` file (default is 5000
     -   **Body**:
         ```json
         {
-            "patient": "patient_id"
+            "patient": "patient_id",
+            "symptoms": [
+                {
+                    "symptoms": ["Fever", "Cough"],
+                    "duration": "3 days",
+                    "severity": 5,
+                    "additionalDetails": "Mild cough"
+                }
+            ],
+            "painLevel": 5,
+            "additionalDetails": "Feeling unwell for the past three days."
         }
         ```
 
 -   **`GET /api/consultations`**: Get all consultations.
 -   **`GET /api/consultations/:id`**: Get a consultation by ID.
+-   **`PUT /api/consultations/:id`**: Update a consultation.
 
 -   **`POST /api/consultations/:id/symptoms`**: Add symptoms to a consultation.
     -   **Body**:
@@ -107,10 +119,9 @@ The server will start on the port specified in your `.env` file (default is 5000
         {
             "symptoms": [
                 {
-                    "symptoms": ["Fever", "Cough"],
-                    "duration": "3 days",
-                    "severity": 5,
-                    "additionalDetails": "Mild cough"
+                    "symptoms": ["Headache"],
+                    "duration": "1 day",
+                    "severity": 3
                 }
             ]
         }
@@ -142,6 +153,7 @@ src/
 ├── routes/         # Express routes
 ├── services/       # Business logic and services
 ├── types/          # TypeScript type definitions
+├── utils/          # Utility functions
 └── index.ts        # Main application entry point
 ```
 
