@@ -41,6 +41,7 @@ export const enhanceConsultationWithCalculations = async (
       symptoms,
       painLevel,
       followUps,
+      // @ts-ignore
       patientInfo
     );
 
@@ -49,6 +50,7 @@ export const enhanceConsultationWithCalculations = async (
       symptoms,
       painLevel,
       followUps,
+      // @ts-ignore
       patientInfo
     );
 

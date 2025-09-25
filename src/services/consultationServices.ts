@@ -50,7 +50,7 @@ export const addSymptoms = async (
 
 export const addFollowUps = async (
   id: string,
-  followUps: IFollowUp[]
+  _followUps: IFollowUp[]
 ): Promise<IConsultationResponse | null> => {
   // Note: You might need to add followUps field back to schema if you want to store them
   // Or handle them differently based on your requirements

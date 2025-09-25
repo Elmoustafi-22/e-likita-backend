@@ -38,6 +38,8 @@ export interface IConsultationResponse extends IConsultation {
   riskAssessment: {
     level: "low" | "medium" | "high";
     factors: string[];
+    confidence?: number;
+    reasoning?: string;
   };
   recommendations: string[];
   nextActions: string[];

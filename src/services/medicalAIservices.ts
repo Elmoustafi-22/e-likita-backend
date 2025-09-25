@@ -247,10 +247,10 @@ export class MedicalAIService {
   // Fallback recommendations
   private fallbackRecommendations(
     riskLevel: string,
-    symptoms: ISymptom[],
-    painLevel: number
+    _symptoms: ISymptom[],
+    _painLevel: number
   ) {
-    const allSymptoms = symptoms.flatMap((s) => s.symptoms).filter(Boolean);
+    // const allSymptoms = symptoms.flatMap((s) => s.symptoms).filter(Boolean);
 
     if (riskLevel === "high") {
       return {

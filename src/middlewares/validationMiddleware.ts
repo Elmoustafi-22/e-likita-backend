@@ -11,7 +11,7 @@ export const validatePatient = [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        next();
+        return next();
     }
 ];
 
@@ -24,6 +24,6 @@ export const validateConsultation = [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        next();
+        return next();
     }
 ];

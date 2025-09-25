@@ -14,7 +14,7 @@ export const createPatient = async (req: Request, res: Response) => {
     }
 };
 
-export const getAllPatients = async (req: Request, res: Response) => {
+export const getAllPatients = async (_req: Request, res: Response) => {
     try {
         const patients = await patientService.getAllPatients();
         res.status(200).json(patients);
@@ -29,8 +29,8 @@ export const getPatientById = async (req: Request, res: Response) => {
         if (!patient) {
             return res.status(404).json({ message: 'Patient not found' });
         }
-        res.status(200).json(patient);
+        return res.status(200).json(patient);
     } catch (error: any) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 };

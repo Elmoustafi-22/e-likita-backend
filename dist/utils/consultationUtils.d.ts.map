@@ -1,0 +1,1 @@
+{"version":3,"file":"consultationUtils.d.ts","sourceRoot":"","sources":["../../src/utils/consultationUtils.ts"],"names":[],"mappings":"AAAA,OAAO,EACL,aAAa,EACb,qBAAqB,EACtB,MAAM,UAAU,CAAC;AAIlB,eAAO,MAAM,6BAA6B,GAAI,WAAW,IAAI,KAAG,MAI/D,CAAC;AAGF,eAAO,MAAM,2BAA2B,GACtC,cAAc,aAAa,KAC1B,aAAa,GAAG,WAKlB,CAAC;AAGF,eAAO,MAAM,mCAAmC,GAC9C,cAAc,aAAa,KAC1B,OAAO,CAAC,qBAAqB,CAgE/B,CAAC"}

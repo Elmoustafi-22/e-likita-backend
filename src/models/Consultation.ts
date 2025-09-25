@@ -5,10 +5,12 @@ import SymptomSchema from "./Symptom";
 
 
 const ConsultationSchema = new Schema<IConsultation>({
+  // @ts-ignore
   patient: { type: Schema.Types.ObjectId, ref: 'Patient', required: true },
   symptoms: [SymptomSchema],
   painLevel: { type: Number, required: true },
   additionalDetails: { type: String, required: true },
+
 }, { timestamps: true });
 
 const Consultation = mongoose.model<IConsultation>("Consultation", ConsultationSchema);
