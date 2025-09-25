@@ -4,9 +4,13 @@ import * as patientService from '../services/patientServices';
 export const createPatient = async (req: Request, res: Response) => {
     try {
         const patient = await patientService.createPatient(req.body);
-        res.status(201).json(patient);
+        return res.status(201).json({
+            success: true,
+            message: 'Patient created successfully',
+            data: patient,
+        });
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+        return res.status(400).json({ message: error.message });
     }
 };
 

@@ -6,7 +6,7 @@ export interface IPatient {
     phone: string;
     medicalHistory: string[];
     knownAllergies: string[];
-    currentMedications: string[];
+    currentMedications: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -27,7 +27,14 @@ export interface IConsultation {
   _id?: string;
   patient: string; // Patient ID
   symptoms: ISymptom[];
-  followUps: IFollowUp[];
+  followUps?: IFollowUp[];
+  painLevel: number;
+  additionalDetails: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IConsultationResponse extends IConsultation {
   riskAssessment: {
     level: "low" | "medium" | "high";
     factors: string[];
@@ -36,8 +43,6 @@ export interface IConsultation {
   nextActions: string[];
   status: "in-progress" | "completed";
   consultationDuration: number;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 export interface IRiskFactor {

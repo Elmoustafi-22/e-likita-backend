@@ -17,11 +17,8 @@ export const validatePatient = [
 
 export const validateConsultation = [
     check('patient', 'Patient ID is required').isMongoId(),
-    check('symptoms', 'Symptoms are required').isArray(),
-    check('riskAssessment', 'Risk assessment is required').isObject(),
-    check('recommendations', 'Recommendations are required').isArray(),
-    check('nextActions', 'Next actions are required').isArray(),
-    check('status', 'Status is required').isIn(['in-progress', 'completed']),
+    check('symptoms', 'Symptoms are required and must not be empty').isArray({ min: 1 }),
+    check('painLevel', 'Pain level is required and must be a number').isNumeric(),
     (req: Request, res: Response, next: NextFunction) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

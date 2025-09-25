@@ -9,15 +9,9 @@ const PatientSchema = new Schema<IPatient>({
   phone: { type: String, required: true },
   medicalHistory: {
     type: [String],
-    required: true,
-  },
-  knownAllergies: {
-    type: [String],
-    required: true,
   },
   currentMedications: {
-    type: [String],
-    required: true,
+    type: String,
   },
 }, {timestamps: true});
 
