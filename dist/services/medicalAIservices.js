@@ -29,7 +29,7 @@ class MedicalAIService {
         const prompt = this.buildRiskAssessmentPrompt(symptoms, painLevel, followUps, patientInfo);
         try {
             const { object } = await (0, ai_1.generateObject)({
-                model: google("models/gemini-1.5-flash"),
+                model: google("models/gemini-2.5-flash"),
                 schema: riskAssessmentSchema,
                 system: `You are a medical triage AI assistant. Analyze symptoms and provide risk assessment.
                  Always be conservative - when in doubt, recommend higher care level.`,
@@ -49,7 +49,7 @@ class MedicalAIService {
         const prompt = this.buildRecommendationsPrompt(riskLevel, symptoms, painLevel, followUps, patientInfo);
         try {
             const { object } = await (0, ai_1.generateObject)({
-                model: google("models/gemini-1.5-pro"), // Using a more powerful model for recommendations
+                model: google("models/gemini-2.5-flash"), // Using a more powerful model for recommendations
                 schema: recommendationsSchema,
                 system: `You are a medical triage AI providing care recommendations.
                  Always prioritize patient safety. Be specific and actionable.`,
